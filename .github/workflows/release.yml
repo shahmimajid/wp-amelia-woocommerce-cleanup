@@ -1,0 +1,44 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update plugin version
+        run: |
+          sed -i "s/^Version: .*/Version: ${{ steps.version.outputs.VERSION }}/" plugin/wp-amelia-woocommerce-cleanup.php
+
+      - name: Commit version update
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add plugin/wp-amelia-woocommerce-cleanup.php
+          git commit -m "Update plugin version to ${{ steps.version.outputs.VERSION }}" || echo "No changes"
+          git push
+
+      - name: Build plugin zip
+        run: |
+          mkdir build
+          zip -r build/wp-amelia-woocommerce-cleanup.zip plugin
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/wp-amelia-woocommerce-cleanup.zip
