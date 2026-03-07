@@ -25,21 +25,21 @@ AWC_Dry_Run_Preview::init();
 
 /*
 |--------------------------------------------------------------------------
-| GitHub Auto Update
+| GitHub Auto Update (disable during development)
 |--------------------------------------------------------------------------
 */
 
-require_once AWC_PLUGIN_PATH . 'lib/plugin-update-checker/plugin-update-checker.php';
+// require_once AWC_PLUGIN_PATH . 'lib/plugin-update-checker/plugin-update-checker.php';
 
-use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+// use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
-$updateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/shahmimajid/wp-amelia-woocommerce-cleanup',
-    __FILE__,
-    'wp-amelia-woocommerce-cleanup'
-);
+// $updateChecker = PucFactory::buildUpdateChecker(
+//     'https://github.com/shahmimajid/wp-amelia-woocommerce-cleanup',
+//     __FILE__,
+//     'wp-amelia-woocommerce-cleanup'
+// );
 
-$updateChecker->setBranch('main');
+// $updateChecker->setBranch('main');
 
 /*
 |--------------------------------------------------------------------------
