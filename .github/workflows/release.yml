@@ -7,8 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-
-  release:
+  build-release:
 
     runs-on: ubuntu-latest
 
@@ -18,15 +17,15 @@ jobs:
     steps:
 
       - name: Checkout repository
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
-      - name: Determine version
+      - name: Get version from tag
         id: vars
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Build plugin package
+      - name: Prepare plugin package
         run: |
           mkdir -p build
           cp -r plugin/wp-amelia-woocommerce-cleanup build/
