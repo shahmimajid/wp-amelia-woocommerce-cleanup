@@ -1,13 +1,13 @@
-name: Build Release
+name: Build and Release WordPress Plugin
 
 on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
-
-  release:
+  build-release:
 
     runs-on: ubuntu-latest
 
@@ -16,16 +16,24 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Build Plugin Zip
+      - name: Get version from tag
+        id: vars
         run: |
-          mkdir build
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Prepare plugin package
+        run: |
+          mkdir -p build
           cp -r plugin/wp-amelia-woocommerce-cleanup build/
           cd build
-          zip -r wp-amelia-woocommerce-cleanup.zip wp-amelia-woocommerce-cleanup
+          zip -r wp-amelia-woocommerce-cleanup-${{ steps.vars.outputs.version }}.zip wp-amelia-woocommerce-cleanup
 
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: build/wp-amelia-woocommerce-cleanup.zip
+          tag_name: v${{ steps.vars.outputs.version }}
+          files: build/wp-amelia-woocommerce-cleanup-${{ steps.vars.outputs.version }}.zip
