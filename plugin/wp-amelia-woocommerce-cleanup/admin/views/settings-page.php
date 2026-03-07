@@ -9,7 +9,9 @@ $settings = get_option('awc_cleanup_settings');
 $enabled = $settings['enabled'] ?? 0;
 $dry_run = $settings['dry_run'] ?? 1;
 $timeout = $settings['timeout'] ?? 30;
-$limit   = $settings['limit'] ?? 50;
+$limit         = $settings['limit'] ?? 50;
+$cron_interval = $settings['cron_interval'] ?? 10;
+$debug_mode    = $settings['debug_mode'] ?? 0;
 
 ?>
 
@@ -85,6 +87,39 @@ value="<?php echo esc_attr($limit); ?>">
 
 <p class="description">
 Maximum orders processed per cron execution.
+</p>
+</td>
+</tr>
+
+<tr>
+<th>Cron Interval (minutes)</th>
+<td>
+<input type="number"
+min="1"
+name="awc_cleanup_settings[cron_interval]"
+value="<?php echo esc_attr($cron_interval); ?>">
+
+<p class="description">
+How often the cleanup cron should run.
+</p>
+</td>
+</tr>
+
+
+<tr>
+<th>Debug Mode</th>
+<td>
+<label>
+<input type="checkbox"
+name="awc_cleanup_settings[debug_mode]"
+value="1"
+<?php checked($debug_mode,1); ?>>
+
+Enable verbose debug logs for order and Amelia sync lookup
+</label>
+
+<p class="description">
+Useful for diagnosing why a booking was not rejected after order cancellation.
 </p>
 </td>
 </tr>
