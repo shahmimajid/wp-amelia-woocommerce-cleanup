@@ -39,8 +39,24 @@ class AWC_Settings_Page {
 
         register_setting(
             'awc_cleanup_group',
-            'awc_cleanup_settings'
+            'awc_cleanup_settings',
+            [
+                'sanitize_callback' => [self::class, 'sanitize_settings']
+            ]
         );
+
+    }
+
+    public static function sanitize_settings($input) {
+
+        $input = is_array($input) ? $input : [];
+
+        return [
+            'enabled' => !empty($input['enabled']) ? 1 : 0,
+            'dry_run' => !empty($input['dry_run']) ? 1 : 0,
+            'timeout' => max(1, intval($input['timeout'] ?? 30)),
+            'limit'   => max(1, intval($input['limit'] ?? 50))
+        ];
 
     }
 
