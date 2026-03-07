@@ -6,12 +6,12 @@ class AWC_Amelia_Sync {
 
         add_action(
             'woocommerce_order_status_cancelled',
-            [self::class, 'reject_booking']
+            [self::class, 'reject']
         );
 
     }
 
-    public static function reject_booking($order_id) {
+    public static function reject($order_id) {
 
         $settings = get_option('awc_cleanup_settings');
 
