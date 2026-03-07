@@ -8,6 +8,7 @@ Automatically cancels abandoned WooCommerce orders and releases Amelia booking s
 - Deposit-safe cancellation
 - Amelia booking synchronization
 - Logging for debugging
+- Configurable cron interval from plugin settings
 
 ## Workflow
 
@@ -22,9 +23,13 @@ Automatically cancels abandoned WooCommerce orders and releases Amelia booking s
 
 ## Configuration
 
-Inside plugin file:
-AMELIA_WC_CLEANUP_DRY_RUN = true
-AMELIA_WC_CLEANUP_TIMEOUT = 1800
+In WooCommerce → Booking Cleanup settings:
+- Enable cleanup
+- Dry run mode
+- Timeout (minutes)
+- Limit per run
+- Cron interval (minutes, default 10)
+- Debug mode (verbose logs for troubleshooting)
 
 ## Installation
 
@@ -32,3 +37,13 @@ Upload plugin folder to:
 `wp-content/plugins/`
 
 Then activate in WordPress Admin.
+
+## Versioning
+
+To keep plugin version aligned with a release tag, run:
+
+```bash
+./scripts/sync-version-with-tag.sh v1.3.0
+```
+
+This updates the plugin header version, `AWC_PLUGIN_VERSION`, and creates a changelog section when missing.

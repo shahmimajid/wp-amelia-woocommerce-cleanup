@@ -39,8 +39,26 @@ class AWC_Settings_Page {
 
         register_setting(
             'awc_cleanup_group',
-            'awc_cleanup_settings'
+            'awc_cleanup_settings',
+            [
+                'sanitize_callback' => [self::class, 'sanitize_settings']
+            ]
         );
+
+    }
+
+    public static function sanitize_settings($input) {
+
+        $input = is_array($input) ? $input : [];
+
+        return [
+            'enabled'       => !empty($input['enabled']) ? 1 : 0,
+            'dry_run'       => !empty($input['dry_run']) ? 1 : 0,
+            'timeout'       => max(1, intval($input['timeout'] ?? 30)),
+            'limit'         => max(1, intval($input['limit'] ?? 50)),
+            'cron_interval' => max(1, intval($input['cron_interval'] ?? 10)),
+            'debug_mode'    => !empty($input['debug_mode']) ? 1 : 0
+        ];
 
     }
 
@@ -53,10 +71,12 @@ class AWC_Settings_Page {
     public static function ensure_defaults() {
 
         $defaults = [
-            'enabled' => 0,
-            'dry_run' => 1,
-            'timeout' => 30,
-            'limit'   => 50
+            'enabled'       => 0,
+            'dry_run'       => 1,
+            'timeout'       => 30,
+            'limit'         => 50,
+            'cron_interval' => 10,
+            'debug_mode'    => 0
         ];
 
         $existing = get_option('awc_cleanup_settings');
