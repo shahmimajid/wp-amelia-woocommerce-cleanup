@@ -2,8 +2,8 @@
 /*
 Plugin Name: WP Amelia WooCommerce Cleanup
 Description: Automatically cancel abandoned WooCommerce orders and release Amelia booking slots.
-Version: 1.0.0
-Author: Fotolab
+Version: 1.2.0
+Author: ShahmiMajid
 License: GPL-2.0-or-later
 */
 
