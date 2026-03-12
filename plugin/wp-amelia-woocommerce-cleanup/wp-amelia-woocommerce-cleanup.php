@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP Amelia WooCommerce Cleanup
 Description: Automatically cancel abandoned WooCommerce orders and release Amelia booking slots.
-Version: 1.5.2
+Version: 1.6.0
 Author: Fotolab
 License: GPL-2.0-or-later
 */
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('AWC_PLUGIN_VERSION', '1.5.2');
+define('AWC_PLUGIN_VERSION', '1.6.0');
 define('AWC_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('AWC_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -34,6 +34,8 @@ add_action('plugins_loaded', function () {
     require_once AWC_PLUGIN_PATH . 'includes/class-dry-run-preview.php';
     require_once AWC_PLUGIN_PATH . 'admin/class-settings-page.php';
 
+
+
     /*
     |--------------------------------------------------------------------------
     | Init components
@@ -47,6 +49,30 @@ add_action('plugins_loaded', function () {
 
     if (is_admin()) {
         AWC_Settings_Page::init();
+    }
+
+});
+
+// self-healing cron scheduler 
+add_action('init', function () {
+
+    if (!class_exists('WooCommerce')) {
+        return;
+    }
+
+    // Ensure cron schedule exists
+    if (!wp_next_scheduled('awc_cleanup_cron')) {
+
+        wp_schedule_event(
+            time() + 60,
+            'every_ten_minutes',
+            'awc_cleanup_cron'
+        );
+
+        if (class_exists('AWC_Logger')) {
+            AWC_Logger::debug('Scheduled missing awc_cleanup_cron event.');
+        }
+
     }
 
 });

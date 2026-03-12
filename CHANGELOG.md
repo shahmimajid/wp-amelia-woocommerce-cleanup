@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0
+
+- self-healing cron scheduler
+- Debug log implementation to verify cron execution
+
 ## 1.5.2
 
 - TBD
