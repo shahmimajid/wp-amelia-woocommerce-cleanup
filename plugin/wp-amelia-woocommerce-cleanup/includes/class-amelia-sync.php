@@ -55,49 +55,7 @@ class AWC_Amelia_Sync {
         $bookings = $wpdb->prefix . 'amelia_customer_bookings';
 
         $order_id = $order->get_id();
-
-        $booking_ids = $wpdb->get_col(
-            $wpdb->prepare(
-                "
-                SELECT bookingId
-                FROM $payments
-                WHERE orderId = %d
-                ",
-                $order_id
-            )
-        );
-
-        $booking_ids = array_values(
-            array_unique(
-                array_filter(
-                    array_map('intval', (array) $booking_ids)
-                )
-            )
-        );
-
-        if ($booking_ids) {
-
-            AWC_Logger::debug(
-                'Matched Amelia booking IDs [' .
-                implode(', ', $booking_ids) .
-                "] for order #{$order_id} via amelia_payments.orderId"
-            );
-
-        } else {
-
-            $meta_booking_id = intval($order->get_meta('amelia_booking_id'));
-
-            if ($meta_booking_id > 0) {
-
-                $booking_ids = [$meta_booking_id];
-
-                AWC_Logger::debug(
-                    "Matched Amelia booking ID {$meta_booking_id} for order #{$order_id} via order meta"
-                );
-
-            }
-
-        }
+        $booking_ids = self::get_booking_ids_for_order($order, $payments);
 
         if (!$booking_ids) {
             AWC_Logger::debug(
@@ -119,6 +77,7 @@ class AWC_Amelia_Sync {
             );
 
         }
+
 
     }
 
