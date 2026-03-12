@@ -39,7 +39,7 @@ class AWC_Dry_Run_Preview {
         */
 
         $order_ids = wc_get_orders([
-            'status'       => 'pending',
+            'status'       => self::get_cleanup_statuses(),
             'return'       => 'ids',
             'limit'        => $limit,
             'date_created' => '<' . $cutoff
@@ -161,6 +161,24 @@ class AWC_Dry_Run_Preview {
         }
 
         wp_send_json_success($results);
+
+    }
+
+    private static function get_cleanup_statuses() {
+
+        $statuses = ['pending'];
+
+        if (function_exists('wc_get_order_statuses')) {
+
+            $registered_statuses = wc_get_order_statuses();
+
+            if (isset($registered_statuses['wc-checkout-draft'])) {
+                $statuses[] = 'checkout-draft';
+            }
+
+        }
+
+        return $statuses;
 
     }
 
