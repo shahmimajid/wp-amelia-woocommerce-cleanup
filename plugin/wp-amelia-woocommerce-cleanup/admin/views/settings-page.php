@@ -12,6 +12,12 @@ $timeout = $settings['timeout'] ?? 30;
 $limit         = $settings['limit'] ?? 50;
 $cron_interval = $settings['cron_interval'] ?? 10;
 $debug_mode    = $settings['debug_mode'] ?? 0;
+$log_file_path = class_exists('AWC_Logger')
+    ? AWC_Logger::get_log_file_path()
+    : '';
+$log_source = class_exists('AWC_Logger')
+    ? AWC_Logger::get_log_source()
+    : 'awc-cleanup';
 
 ?>
 
@@ -120,6 +126,8 @@ Enable verbose debug logs for order and Amelia sync lookup
 
 <p class="description">
 Useful for diagnosing why a booking was not rejected after order cancellation.
+<br>WooCommerce Logs source: <code><?php echo esc_html($log_source); ?></code>
+<br>WooCommerce log file path: <code><?php echo esc_html($log_file_path ?: 'Unavailable'); ?></code>
 </p>
 </td>
 </tr>
