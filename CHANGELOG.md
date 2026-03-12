@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.2
+
+- TBD
+
 ## 1.5.1
 
 - TBD
