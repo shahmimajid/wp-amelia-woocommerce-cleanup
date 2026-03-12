@@ -34,6 +34,8 @@ add_action('plugins_loaded', function () {
     require_once AWC_PLUGIN_PATH . 'includes/class-dry-run-preview.php';
     require_once AWC_PLUGIN_PATH . 'admin/class-settings-page.php';
 
+
+
     /*
     |--------------------------------------------------------------------------
     | Init components
@@ -47,6 +49,30 @@ add_action('plugins_loaded', function () {
 
     if (is_admin()) {
         AWC_Settings_Page::init();
+    }
+
+});
+
+// self-healing cron scheduler 
+add_action('init', function () {
+
+    if (!class_exists('WooCommerce')) {
+        return;
+    }
+
+    // Ensure cron schedule exists
+    if (!wp_next_scheduled('awc_cleanup_cron')) {
+
+        wp_schedule_event(
+            time() + 60,
+            'every_ten_minutes',
+            'awc_cleanup_cron'
+        );
+
+        if (class_exists('AWC_Logger')) {
+            AWC_Logger::debug('Scheduled missing awc_cleanup_cron event.');
+        }
+
     }
 
 });
