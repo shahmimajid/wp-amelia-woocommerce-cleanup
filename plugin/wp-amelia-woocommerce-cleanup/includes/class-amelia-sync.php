@@ -54,6 +54,7 @@ class AWC_Amelia_Sync {
         $payments = $wpdb->prefix . 'amelia_payments';
         $bookings = $wpdb->prefix . 'amelia_customer_bookings';
 
+        $order_id = $order->get_id();
         $booking_ids = self::get_booking_ids_for_order($order, $payments);
 
         if (!$booking_ids) {
@@ -76,6 +77,7 @@ class AWC_Amelia_Sync {
             );
 
         }
+
 
     }
 
