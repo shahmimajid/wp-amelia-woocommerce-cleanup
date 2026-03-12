@@ -18,6 +18,9 @@ class AWC_Cleanup_Runner {
         | Only run via WP Cron
         |--------------------------------------------------------------------------
         */
+        if (class_exists('AWC_Logger')) {
+        AWC_Logger::debug('Cleanup runner triggered via cron.');
+        }
 
         if (!wp_doing_cron()) {
             return;
